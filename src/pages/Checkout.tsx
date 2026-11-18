@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import type { Page, Product } from "../data/store";
+import { FREE_SHIPPING_THRESHOLD, type Page, type Product } from "../data/store";
 import { Button, Icon } from "../components/primitives";
 import { EmptyState } from "../components/StoreComponents";
 
@@ -144,8 +144,10 @@ export function Checkout({
             <span>${subtotal.toFixed(2)}</span>
           </div>
           <div className="summary-line">
-            <span>Delivery</span>
-            <span className="sage">Free</span>
+            <span>Shipping</span>
+            <span className="sage">
+              {subtotal >= FREE_SHIPPING_THRESHOLD ? "Complimentary" : "Calculated at checkout"}
+            </span>
           </div>
           <div className="total-line">
             <span>Total</span>

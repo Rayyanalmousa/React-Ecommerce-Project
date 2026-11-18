@@ -87,26 +87,13 @@
     width: calc(100% - 32px);
   }
 
-  .site-header {
-    height: 68px;
-  }
-
-  .desktop-nav,
-  .hide-mobile {
-    display: none;
-  }
-
-  .mobile-only {
-    display: grid;
-  }
-
   .logo {
-    font-size: 23px;
+    font-size: 20px;
   }
 
   .logo-mark {
-    width: 29px;
-    height: 29px;
+    width: 26px;
+    height: 26px;
   }
 
   .hero {

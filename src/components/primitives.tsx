@@ -31,6 +31,8 @@ export function Icon({
       </>
     ),
     x: <path d="m6 6 12 12M18 6 6 18" />,
+    plus: <path d="M12 5v14M5 12h14" />,
+    minus: <path d="M5 12h14" />,
     arrow: <path d="m9 18 6-6-6-6" />,
     chevron: <path d="m6 9 6 6 6-6" />,
     trash: (

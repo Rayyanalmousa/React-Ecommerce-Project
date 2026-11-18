@@ -16,6 +16,8 @@ export type Product = {
   color: string;
 };
 
+export const FREE_SHIPPING_THRESHOLD = 150;
+
 export const products: Product[] = [
   {
     id: 1,
