@@ -111,9 +111,11 @@ export function Home({
           <div className="container">
             <SectionHeading eyebrow="Find your shelf" title="Shop by category" />
             <div className="category-grid">
-              {categories.map(([name, sub, symbol], i) => (
+              {categories.map(([name, sub, image], i) => (
                 <button key={name} onClick={() => go("products")} className={`category-tile c${i}`}>
-                  <span className="category-symbol">{symbol}</span>
+                  <span className="category-art">
+                    <img src={image} alt="" />
+                  </span>
                   <span>
                     <strong>{name}</strong>
                     <small>{sub}</small>

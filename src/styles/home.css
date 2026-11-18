@@ -393,9 +393,16 @@
   text-overflow: ellipsis;
 }
 
-.product-info p {
+.product-info .product-author {
   font: italic 12px Lora;
   color: #7c6e70;
+}
+
+.product-info .product-description {
+  min-height: 54px;
+  margin: 10px 0 12px;
+  color: #716266;
+  font: 12px/1.5 Lora, serif;
 }
 
 .product-bottom {
@@ -404,21 +411,31 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 .product-bottom strong {
-  font: 600 16px "Playfair Display";
+  color: var(--ink);
+  font: 700 16px/1 Inter, sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .product-bottom button {
   border: 0;
-  background: none;
-  color: var(--burgundy);
+  border-radius: 6px;
+  background: var(--burgundy);
+  color: var(--white);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  border-bottom: 1px solid var(--gold);
-  padding: 4px 0;
+  padding: 9px 12px;
+  transition: background-color .2s, transform .2s;
+}
+
+.product-bottom button:hover {
+  background: #551522;
+  transform: translateY(-1px);
 }
 
 .category-section {
@@ -427,12 +444,13 @@
 }
 
 .category-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
 .category-tile {
+  flex: 0 0 calc((100% - 32px) / 3);
   min-height: 146px;
   border: 1px solid #c9a24b44;
   border-radius: 12px;
@@ -452,16 +470,26 @@
   box-shadow: 0 12px 25px #3c1d2412;
 }
 
-.category-symbol {
+.category-art {
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--burgundy);
-  color: var(--gold);
-  font: 28px "Playfair Display";
+  display: block;
+  overflow: hidden;
+  background: var(--parchment);
   flex: none;
+}
+
+.category-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(.15) saturate(.7);
+  transition: transform .3s;
+}
+
+.category-tile:hover .category-art img {
+  transform: scale(1.08);
 }
 
 .category-tile>span:nth-child(2) {

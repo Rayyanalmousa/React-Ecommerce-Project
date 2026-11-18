@@ -34,7 +34,8 @@ export function ProductCard({
       <div className="product-info">
         <span className="tag">{product.category}</span>
         <h3>{product.title}</h3>
-        <p>{product.author}</p>
+        <p className="product-author">{product.author}</p>
+        <p className="product-description">{product.description}</p>
         <div className="product-bottom">
           <strong>${product.price.toFixed(2)}</strong>
           <button onClick={onCart}>Add to cart</button>

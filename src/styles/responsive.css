@@ -28,8 +28,8 @@
     gap: 48px 24px;
   }
 
-  .category-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .category-tile {
+    flex-basis: calc((100% - 16px) / 2);
   }
 
   .editorial {
@@ -206,15 +206,12 @@
     scroll-snap-align: start;
   }
 
-  .category-grid {
-    grid-template-columns: 1fr;
-  }
-
   .category-tile {
+    flex-basis: 100%;
     min-height: 110px;
   }
 
-  .category-symbol {
+  .category-art {
     width: 52px;
     height: 52px;
   }
@@ -342,12 +339,13 @@
   }
 
   .product-bottom {
-    align-items: flex-start;
+    align-items: center;
     gap: 5px;
   }
 
   .product-bottom button {
-    font-size: 9px;
+    padding: 8px 9px;
+    font-size: 10px;
   }
 
   .page-title-row {
@@ -444,7 +442,7 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .listing-page .product-info p {
+  .listing-page .product-info .product-author {
     min-height: 26px;
   }
 }
