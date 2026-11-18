@@ -1,0 +1,45 @@
+.toast {
+  position: fixed;
+  z-index: 100;
+  right: 24px;
+  bottom: 24px;
+  background: #2c2124;
+  color: white;
+  padding: 13px 18px 13px 12px;
+  border-radius: 8px;
+  box-shadow: 0 15px 40px #16090d44;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  animation: toast .3s ease;
+}
+
+.toast span {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--sage);
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(100%)
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0
+  }
+}
+
+@keyframes toast {
+  from {
+    opacity: 0;
+    transform: translateY(10px)
+  }
+}
+

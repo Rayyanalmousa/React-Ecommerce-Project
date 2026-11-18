@@ -1,0 +1,104 @@
+.confirmation {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 50px 20px;
+  background: var(--parchment);
+}
+
+.confirmation-card {
+  background: var(--cream);
+  width: min(100%, 600px);
+  border-radius: 16px;
+  text-align: center;
+  padding: 55px;
+  box-shadow: 0 20px 70px #3d1b2320;
+  border: 1px solid #c9a24b55;
+  position: relative;
+}
+
+.confirmation-card::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid #c9a24b44;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: var(--sage);
+  color: white;
+}
+
+.confirmation-card h1 {
+  font-size: 50px;
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+
+.confirmation-card>p:not(.eyebrow) {
+  font: 14px/1.7 Lora;
+  color: #716266;
+  max-width: 410px;
+  margin: 0 auto 26px;
+}
+
+.order-ref {
+  background: var(--parchment);
+  border-radius: 8px;
+  padding: 14px;
+  display: grid;
+  gap: 5px;
+  margin-bottom: 22px;
+}
+
+.order-ref span {
+  text-transform: uppercase;
+  font-size: 8px;
+  letter-spacing: .15em;
+}
+
+.order-ref strong {
+  font: 600 16px "Playfair Display";
+  letter-spacing: .05em;
+}
+
+.confirmation-list {
+  border-block: 1px solid #c9a24b55;
+  padding: 14px 0;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.confirmation-list>div {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font: 12px Lora;
+}
+
+.confirmation-list small {
+  color: #8b7d7f;
+}
+
+.confirmation-total {
+  border-top: 1px solid #6b1e2e22;
+  margin-top: 8px;
+  padding-top: 14px !important;
+  font-weight: 600 !important;
+}
+
+.confirmation-help {
+  display: block;
+  color: #8b7e80;
+  margin-top: 18px;
+  font-size: 9px;
+}
+

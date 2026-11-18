@@ -1,0 +1,163 @@
+.site-header {
+  height: 82px;
+  border-bottom: 1px solid rgba(107, 30, 46, .14);
+  background: rgba(247, 241, 227, .94);
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  backdrop-filter: blur(14px);
+}
+
+.header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 27px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 50% 50% 48% 48%;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 38px;
+  height: 100%;
+  align-items: center;
+}
+
+.desktop-nav button {
+  height: 100%;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  position: relative;
+  cursor: pointer;
+}
+
+.desktop-nav button::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  background: var(--gold);
+  bottom: 18px;
+  left: 50%;
+  right: 50%;
+  transition: .25s;
+}
+
+.desktop-nav button:hover::after,
+.desktop-nav button.active::after {
+  left: 0;
+  right: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  border: 0;
+  background: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.icon-btn:hover {
+  background: var(--parchment);
+}
+
+.count {
+  position: absolute;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--burgundy);
+  color: #fff;
+  font: 600 10px/17px Inter;
+  right: 0;
+  top: 0;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(42, 27, 31, .45);
+  z-index: 50;
+  backdrop-filter: blur(3px);
+  animation: fade .2s;
+}
+
+.mobile-drawer,
+.filter-drawer {
+  width: min(88vw, 380px);
+  height: 100%;
+  margin-left: auto;
+  background: var(--cream);
+  padding: 24px;
+  box-shadow: -20px 0 60px #21101833;
+  animation: slide .3s ease;
+  overflow: auto;
+}
+
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 64px;
+}
+
+.mobile-drawer nav {
+  display: grid;
+}
+
+.mobile-drawer nav button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid #6b1e2e22;
+  background: none;
+  padding: 20px 0;
+  font: 600 25px "Playfair Display";
+  text-align: left;
+}
+
+.drawer-quote {
+  margin-top: 64px;
+  background: var(--parchment);
+  padding: 24px;
+  border-radius: 12px;
+  font: italic 16px/1.6 Lora;
+}
+
