@@ -1,0 +1,10 @@
+{
+  "description": "Shop books and cozy reading accessories, save favorites, manage your cart, and place orders through a warm, easy-to-use online bookstore.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
