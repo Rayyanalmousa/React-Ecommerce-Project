@@ -1,8 +1,57 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { FREE_SHIPPING_THRESHOLD, type Page, type Product } from "../data/store";
 import { Button, Icon } from "../components/primitives";
 import { EmptyState } from "../components/StoreComponents";
+import {
+  CardPaymentForm,
+  type CardPaymentErrors,
+  type CardPaymentField,
+  type CardPaymentValues,
+} from "../components/CardPaymentForm";
+import { detectBrand, luhnCheck, validateExpiry } from "../utils/card";
+
+const EMPTY_CARD: CardPaymentValues = {
+  name: "",
+  number: "",
+  expiry: "",
+  cvv: "",
+};
+
+const CARD_FIELDS: CardPaymentField[] = ["name", "number", "expiry", "cvv"];
+
+function validateCardField(field: CardPaymentField, values: CardPaymentValues): string | undefined {
+  if (field === "name") {
+    const name = values.name.trim();
+    if (!name) return "Enter the name on your card.";
+    if (name.length < 3) return "Name must be at least 3 characters.";
+    if (!/^[\p{L} ]+$/u.test(name)) return "Use letters and spaces only.";
+    return undefined;
+  }
+
+  if (field === "number") {
+    const digits = values.number.replace(/\D/g, "");
+    const brand = detectBrand(digits);
+    if (!brand) return "Enter a Visa, Mastercard, or Amex card number.";
+    const expectedLength = brand === "Amex" ? 15 : 16;
+    if (digits.length !== expectedLength) return "Enter the complete card number.";
+    if (!luhnCheck(digits)) return "Enter a valid card number.";
+    return undefined;
+  }
+
+  if (field === "expiry") {
+    if (!values.expiry) return "Enter your card’s expiry date.";
+    if (!validateExpiry(values.expiry)) return "Enter a valid future date.";
+    return undefined;
+  }
+
+  const expectedLength = detectBrand(values.number) === "Amex" ? 4 : 3;
+  if (!values.cvv) return "Enter the card security code.";
+  if (!new RegExp(`^\\d{${expectedLength}}$`).test(values.cvv)) {
+    return `Security code must be ${expectedLength} digits.`;
+  }
+  return undefined;
+}
 
 export function Checkout({
   cart,
@@ -14,7 +63,17 @@ export function Checkout({
   go: (p: Page) => void;
 }) {
   const [submitted, setSubmitted] = useState(false);
-  const [payment, setPayment] = useState("cod");
+  const [payment, setPayment] = useState<"cash" | "card">("cash");
+  const [cardValues, setCardValues] = useState<CardPaymentValues>(EMPTY_CARD);
+  const [cardErrors, setCardErrors] = useState<CardPaymentErrors>({});
+  const cardInputRefs = useRef<Partial<Record<CardPaymentField, HTMLInputElement>>>({});
+  const registerCardInput = useCallback(
+    (field: CardPaymentField, input: HTMLInputElement | null) => {
+      if (input) cardInputRefs.current[field] = input;
+      else delete cardInputRefs.current[field];
+    },
+    [],
+  );
   const subtotal = cart.reduce((s, p) => s + p.price * (quantities[p.id] || 1), 0);
   if (!cart.length)
     return (
@@ -28,11 +87,53 @@ export function Checkout({
         />
       </main>
     );
+  const changeCardField = (field: CardPaymentField, value: string) => {
+    setCardValues((current) => {
+      const next = { ...current, [field]: value };
+      if (field === "number") {
+        const cvvLength = detectBrand(value) === "Amex" ? 4 : 3;
+        next.cvv = next.cvv.slice(0, cvvLength);
+      }
+      return next;
+    });
+    setCardErrors((current) => {
+      const next = { ...current };
+      delete next[field];
+      if (field === "number") delete next.cvv;
+      return next;
+    });
+  };
+  const validateCardForm = () => {
+    const nextErrors: CardPaymentErrors = {};
+    for (const field of CARD_FIELDS) {
+      const error = validateCardField(field, cardValues);
+      if (error) nextErrors[field] = error;
+    }
+    setCardErrors(nextErrors);
+
+    const firstInvalid = CARD_FIELDS.find((field) => nextErrors[field]);
+    if (firstInvalid) cardInputRefs.current[firstInvalid]?.focus();
+    return firstInvalid === undefined;
+  };
+  const blurCardField = (field: CardPaymentField) => {
+    const error = validateCardField(field, cardValues);
+    setCardErrors((current) => {
+      const next = { ...current };
+      if (error) next[field] = error;
+      else delete next[field];
+      return next;
+    });
+  };
   const place = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
     const form = e.currentTarget;
-    if (form.checkValidity()) go("confirmation");
+    const cardValid = payment === "cash" || validateCardForm();
+    if (form.checkValidity() && cardValid) {
+      setCardValues(EMPTY_CARD);
+      setCardErrors({});
+      go("confirmation");
+    }
   };
   return (
     <main className="container checkout-page">
@@ -93,12 +194,12 @@ export function Checkout({
             </div>
           </div>
           <div className="payment-options">
-            <label className={payment === "cod" ? "selected" : ""}>
+            <label className={payment === "cash" ? "selected" : ""}>
               <input
                 type="radio"
                 name="payment"
-                checked={payment === "cod"}
-                onChange={() => setPayment("cod")}
+                checked={payment === "cash"}
+                onChange={() => setPayment("cash")}
               />
               <span>
                 <b>Cash on delivery</b>
@@ -119,6 +220,19 @@ export function Checkout({
               </span>
               <i>Card</i>
             </label>
+          </div>
+          <div
+            className={`card-payment-reveal${payment === "card" ? " is-visible" : ""}`}
+            aria-hidden={payment !== "card"}
+            inert={payment !== "card"}
+          >
+            <CardPaymentForm
+              value={cardValues}
+              onChange={changeCardField}
+              errors={cardErrors}
+              onBlur={blurCardField}
+              onInputRef={registerCardInput}
+            />
           </div>
         </section>
         <aside className="checkout-summary">
