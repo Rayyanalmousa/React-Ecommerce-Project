@@ -107,48 +107,68 @@ export function Home({
             ))}
           </div>
         </section>
+
+
+
+
+
+
         <section className="category-section">
           <div className="container">
             <SectionHeading eyebrow="Find your shelf" title="Shop by category" />
-            <div className="category-grid">
-              {categories.map(([name, sub, image], i) => (
-                <button key={name} onClick={() => go("products")} className={`category-tile c${i}`}>
-                  <span className="category-art">
-                    <img src={image} alt="" />
-                  </span>
-                  <span>
+            <div className="category-showcase">
+              {categories.map(([name, sub, image]) => (
+                <div key={name} className="category-card">
+                  <img src={image} alt={name} loading="lazy" />
+                  <div className="category-card-overlay">
                     <strong>{name}</strong>
                     <small>{sub}</small>
-                  </span>
-                  <Icon name="arrow" />
-                </button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </section>
-        <section className="container editorial">
-          <div className="editorial-image">
+
+
+        <section className="container">
+          <div className="editorial-banner">
             <img
-              src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?auto=format&fit=crop&w=1200&q=90"
+              src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?auto=format&fit=crop&w=1600&q=90"
               alt="A book and candle in a warm reading nook"
             />
-          </div>
-          <div className="editorial-copy">
-            <p className="eyebrow">The reading ritual</p>
-            <h2>
-              Make a little room
-              <br />
-              for wonder.
-            </h2>
-            <p>
-              Dim the lights, put the kettle on, and let the rest of the world wait. Our reading
-              accessories are chosen to make every chapter feel like an occasion.
-            </p>
-            <Button variant="secondary" onClick={() => go("products")}>
-              Shop reading accessories
-            </Button>
+            <div className="editorial-banner-frame" />
+            <div className="editorial-banner-copy">
+              <p className="eyebrow">The reading ritual</p>
+              <h2>
+                Make a little room
+                <br />
+                for wonder.
+              </h2>
+              <p className="editorial-banner-text">
+                Dim the lights, put the kettle on, and let the rest of the world wait. Our reading
+                accessories are chosen to make every chapter feel like an occasion.
+              </p>
+              <Button variant="secondary" onClick={() => go("products")}>
+                Shop reading accessories
+              </Button>
+            </div>
           </div>
         </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <section className="promo">
           <div className="promo-star">✦</div>
           <div>
