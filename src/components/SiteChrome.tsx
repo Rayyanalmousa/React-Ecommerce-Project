@@ -20,7 +20,7 @@ export function Footer({ go }: { go: (p: Page) => void }) {
         </div>
         <div>
           <h4>Explore</h4>
-          <button onClick={() => go("products")}>All books</button>
+          <button onClick={() => go("products")}>Our books</button>
           <button onClick={() => go("wishlist")}>Wishlist</button>
           <button onClick={() => go("style")}>Style guide</button>
         </div>
