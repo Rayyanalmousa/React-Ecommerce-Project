@@ -1,0 +1,54 @@
+import type { Page } from "../data/store";
+import { Icon, Logo } from "./primitives";
+
+export function Footer({ go }: { go: (p: Page) => void }) {
+  return (
+    <footer>
+      <div className="container footer-grid">
+        <div>
+          <Logo onClick={() => go("home")} />
+          <p className="footer-tagline">
+            Thoughtfully chosen stories and objects for slower, cozier days.
+          </p>
+          <div className="socials">
+            <button aria-label="Instagram">
+              <Icon name="instagram" />
+            </button>
+            <button aria-label="Pinterest">P</button>
+            <button aria-label="Facebook">f</button>
+          </div>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <button onClick={() => go("products")}>All books</button>
+          <button onClick={() => go("wishlist")}>Wishlist</button>
+          <button onClick={() => go("style")}>Style guide</button>
+        </div>
+        <div>
+          <h4>Categories</h4>
+          <button onClick={() => go("products")}>Fiction</button>
+          <button onClick={() => go("products")}>Fantasy</button>
+          <button onClick={() => go("products")}>Accessories</button>
+        </div>
+        <div className="newsletter">
+          <h4>Notes from the stacks</h4>
+          <p>New arrivals and quiet recommendations, twice a month.</p>
+          <div>
+            <input
+              type="email"
+              placeholder="Your email address"
+              aria-label="Email for newsletter"
+            />
+            <button aria-label="Subscribe">
+              <Icon name="arrow" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="container footer-bottom">
+        <span>© 2026 Bookish. All stories reserved.</span>
+        <span>Made for readers, with care.</span>
+      </div>
+    </footer>
+  );
+}

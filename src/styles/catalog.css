@@ -1,0 +1,401 @@
+
+.page-intro {
+  text-align: center;
+  padding: 72px 0 48px;
+}
+
+.page-intro h1,
+.page-title-row h1 {
+  font-size: 55px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.page-intro>p:last-child {
+  font: italic 15px Lora;
+  color: #76676a;
+}
+
+.shop-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-block: 1px solid #c9a24b55;
+  padding: 16px 0;
+}
+
+.search-box {
+  height: 48px;
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #6b1e2e33;
+  border-radius: 8px;
+  padding: 0 14px;
+  background: #fffaf0;
+}
+
+.search-box input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: none;
+  font-size: 13px;
+  min-width: 0;
+}
+
+/* Sorting Dropdown */
+.select-box {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.select-box span {
+  color: #796b6e;
+  font-weight: 400;
+}
+
+.select-box select {
+  appearance: none;
+  -webkit-appearance: none;
+
+  min-width: 145px;
+  padding: 8px 25px 8px 2px;
+
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+
+  background-color: transparent;
+  color: #352327;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23352327' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right center;
+
+  transition: color 0.2s ease;
+}
+
+.select-box select:hover {
+  color: var(--burgundy);
+}
+
+.select-box select:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.select-box select option {
+  background: #f8f3e8;
+  color: #352327;
+}
+
+.filter-mobile {
+  display: none;
+}
+
+.shop-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 48px;
+  padding: 40px 0 110px;
+}
+
+.filters {
+  border-right: 1px solid #6b1e2e1f;
+  padding-right: 28px;
+}
+
+.filter-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.filter-title h3 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.filter-title button {
+  border: 0;
+  border-bottom: 1px solid var(--gold);
+  color: var(--burgundy);
+  background: none;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.filters-content fieldset {
+  border: 0;
+  border-top: 1px solid #6b1e2e22;
+  padding: 24px 0;
+  margin: 0;
+}
+
+.filters-content legend {
+  padding-top: 24px;
+  font: 600 12px Inter;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  width: 100%;
+}
+
+/* Category Filter Options */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 5px 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #4a3435;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.check-row:hover {
+  background: #f8f3e8;
+  border-color: #d9c9ae;
+}
+.check-row small {
+  margin-left: auto;
+  color: #978a8b;
+  background: #f3eee5;
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 10px;
+  transition: all 0.2s ease;
+}
+
+.check-row:has(input:checked) small {
+  background: #6b1e2e;
+  color: #fffaf0;
+}
+
+/* Custom Checkbox */
+.check-row input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+
+  border: 1.5px solid #c9a24b;
+  border-radius: 5px;
+
+  background: #fffaf0;
+  cursor: pointer;
+
+  display: grid;
+  place-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.check-row input[type="checkbox"]::before {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+.check-row input[type="checkbox"]:checked {
+  background: #6b1e2e;
+  border-color: #6b1e2e;
+}
+
+.check-row input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.check-row input[type="checkbox"]:focus-visible {
+  outline: 2px solid #c9a24b;
+  outline-offset: 3px;
+}
+
+.check-row span {
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.check-row:hover span {
+  color: #6b1e2e;
+}
+
+.check-row:has(input:checked) {
+  background: #f3e9df;
+  border-color: #d9c9ae;
+}
+
+.check-row:has(input:checked) span {
+  color: #6b1e2e;
+  font-weight: 600;
+}
+
+
+
+.range {
+  width: 100%;
+  accent-color: var(--burgundy);
+  margin: 12px 0;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.price-inputs span:not(:nth-child(2)) {
+  border: 1px solid #6b1e2e2c;
+  background: #fffaf0;
+  border-radius: 6px;
+  padding: 8px;
+  flex: 1;
+  font-size: 11px;
+}
+
+.price-inputs span:nth-child(2) {
+  color: #9b8c8e;
+  font-size: 10px;
+}
+
+.results-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #8b7c7e;
+  font: italic 11px Lora;
+  margin-bottom: 22px;
+}
+
+.results-line i {
+  height: 1px;
+  background: #c9a24b55;
+  flex: 1;
+}
+
+.listing-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 38px 20px;
+}
+
+.filter-drawer {
+  padding-bottom: 40px;
+}
+
+.filter-drawer .drawer-head {
+  margin-bottom: 15px;
+}
+
+.filter-drawer h2 {
+  margin: 0;
+}
+
+.full {
+  width: 100%;
+}
+
+.empty-page {
+  min-height: 620px;
+  display: grid;
+  place-items: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.empty-art {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--parchment);
+  color: var(--burgundy);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 28px;
+  position: relative;
+}
+
+.empty-art span {
+  position: absolute;
+  top: -4px;
+  right: 4px;
+  color: var(--gold);
+  font-size: 24px;
+}
+
+.empty-state h2 {
+  font-size: 35px;
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  font: 15px/1.7 Lora;
+  color: #77696c;
+  margin-bottom: 28px;
+}
+
+
+/* Elegant Bookish Dropdown Options */
+.select-box select {
+  border: 1px solid #d9c9ae;
+  border-radius: 6px;
+  padding: 9px 28px 9px 12px;
+  background-color: #f8f3e8;
+  color: #352327;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Options */
+.select-box select option {
+  background-color: #f8f3e8;
+  color: #4a3435;
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* Hover / Selected */
+.select-box select option:checked {
+  background-color: #e9ddc8;
+  color: #6b1e2e;
+}
+
+/* Focus */
+.select-box select:focus {
+  border-color: #c9a24b;
+  outline: none;
+  box-shadow: 0 0 0 3px #c9a24b20;
+}
+
+.select-box select:hover {
+  border-color: #c9a24b;
+}

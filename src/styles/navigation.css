@@ -1,0 +1,69 @@
+.logo {
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Lora", serif;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  padding: 0;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 50% 50% 48% 48%;
+}
+
+.icon-btn {
+  border: 0;
+  background: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.icon-btn:hover {
+  background: var(--parchment);
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(42, 27, 31, .45);
+  z-index: 50;
+  backdrop-filter: blur(3px);
+  animation: fade .2s;
+}
+
+.filter-drawer {
+  width: min(88vw, 380px);
+  height: 100%;
+  margin-left: auto;
+  background: var(--cream);
+  padding: 24px;
+  box-shadow: -20px 0 60px #21101833;
+  animation: slide .3s ease;
+  overflow: auto;
+}
+
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 64px;
+}
+
+
