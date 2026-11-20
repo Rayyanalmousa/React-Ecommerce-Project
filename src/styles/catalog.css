@@ -1,3 +1,4 @@
+
 .page-intro {
   text-align: center;
   padding: 72px 0 48px;
@@ -45,23 +46,61 @@
   min-width: 0;
 }
 
+/* Sorting Dropdown */
 .select-box {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .select-box span {
   color: #796b6e;
+  font-weight: 400;
 }
 
 .select-box select {
+  appearance: none;
+  -webkit-appearance: none;
+
+  min-width: 145px;
+  padding: 8px 25px 8px 2px;
+
   border: 0;
-  background: transparent;
-  font-weight: 600;
+  border-radius: 0;
   outline: 0;
+
+  background-color: transparent;
+  color: #352327;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23352327' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right center;
+
+  transition: color 0.2s ease;
+}
+
+.select-box select:hover {
+  color: var(--burgundy);
+}
+
+.select-box select:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.select-box select option {
+  background: #f8f3e8;
+  color: #352327;
 }
 
 .filter-mobile {
@@ -116,27 +155,104 @@
   width: 100%;
 }
 
-.check-row,
-.radio-row {
+/* Category Filter Options */
+.check-row {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 7px 0;
-  font-size: 12px;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 5px 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #4a3435;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
+.check-row:hover {
+  background: #f8f3e8;
+  border-color: #d9c9ae;
+}
 .check-row small {
   margin-left: auto;
   color: #978a8b;
+  background: #f3eee5;
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 10px;
+  transition: all 0.2s ease;
 }
 
-.check-row input,
-.radio-row input {
-  accent-color: var(--burgundy);
-  width: 15px;
-  height: 15px;
+.check-row:has(input:checked) small {
+  background: #6b1e2e;
+  color: #fffaf0;
 }
+
+/* Custom Checkbox */
+.check-row input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+
+  border: 1.5px solid #c9a24b;
+  border-radius: 5px;
+
+  background: #fffaf0;
+  cursor: pointer;
+
+  display: grid;
+  place-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.check-row input[type="checkbox"]::before {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+.check-row input[type="checkbox"]:checked {
+  background: #6b1e2e;
+  border-color: #6b1e2e;
+}
+
+.check-row input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.check-row input[type="checkbox"]:focus-visible {
+  outline: 2px solid #c9a24b;
+  outline-offset: 3px;
+}
+
+.check-row span {
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.check-row:hover span {
+  color: #6b1e2e;
+}
+
+.check-row:has(input:checked) {
+  background: #f3e9df;
+  border-color: #d9c9ae;
+}
+
+.check-row:has(input:checked) span {
+  color: #6b1e2e;
+  font-weight: 600;
+}
+
+
 
 .range {
   width: 100%;
@@ -245,3 +361,41 @@
   margin-bottom: 28px;
 }
 
+
+/* Elegant Bookish Dropdown Options */
+.select-box select {
+  border: 1px solid #d9c9ae;
+  border-radius: 6px;
+  padding: 9px 28px 9px 12px;
+  background-color: #f8f3e8;
+  color: #352327;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Options */
+.select-box select option {
+  background-color: #f8f3e8;
+  color: #4a3435;
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* Hover / Selected */
+.select-box select option:checked {
+  background-color: #e9ddc8;
+  color: #6b1e2e;
+}
+
+/* Focus */
+.select-box select:focus {
+  border-color: #c9a24b;
+  outline: none;
+  box-shadow: 0 0 0 3px #c9a24b20;
+}
+
+.select-box select:hover {
+  border-color: #c9a24b;
+}

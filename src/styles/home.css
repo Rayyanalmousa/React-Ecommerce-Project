@@ -438,108 +438,182 @@
   transform: translateY(-1px);
 }
 
+
+
+
+
+
 .category-section {
   background: var(--parchment);
   padding: 100px 0;
 }
 
-.category-grid {
+
+
+
+.category-showcase {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
 }
 
-.category-tile {
-  flex: 0 0 calc((100% - 32px) / 3);
-  min-height: 146px;
-  border: 1px solid #c9a24b44;
+
+.category-card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 150px;
+  max-width: 200px;
+  aspect-ratio: 1 / 1.15;
   border-radius: 12px;
-  background: #f7f1e366;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding: 24px;
-  text-align: left;
-  cursor: pointer;
-  transition: .25s;
-}
-
-.category-tile:hover {
-  background: var(--cream);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px #3c1d2412;
-}
-
-.category-art {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  display: block;
   overflow: hidden;
   background: var(--parchment);
-  flex: none;
+  border: 1px solid #c9a24b44;
+  box-shadow: 0 6px 18px #38182014;
+  transition: transform .3s, box-shadow .3s;
 }
 
-.category-art img {
+.category-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   filter: sepia(.15) saturate(.7);
-  transition: transform .3s;
+  transition: transform .5s;
 }
 
-.category-tile:hover .category-art img {
-  transform: scale(1.08);
+.category-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, #4c1527d9 0%, transparent 60%);
+  pointer-events: none;
 }
 
-.category-tile>span:nth-child(2) {
+.category-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
   display: grid;
-  gap: 7px;
-  flex: 1;
+  gap: 4px;
+  padding: 14px;
+  color: #f7e8c2;
 }
 
-.category-tile strong {
-  font: 600 20px "Playfair Display";
+.category-card-overlay strong {
+  font: 600 16px/1.2 "Playfair Display";
 }
 
-.category-tile small {
-  color: #76676a;
+.category-card-overlay small {
   font: italic 11px Lora;
 }
 
-.editorial {
-  margin-block: 104px;
-  min-height: 520px;
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  padding: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #e4dac4;
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px #3c1d2433;
 }
 
-.editorial-image img {
+.category-card:hover img {
+  transform: scale(1.07);
+}
+
+
+
+
+.editorial-banner {
+  position: relative;
+  margin-block: 104px;
+  min-height: 440px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 20px 50px #4e24312a;
+}
+
+.editorial-banner > img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(.65) sepia(.12);
+  filter: saturate(.7) sepia(.15);
 }
 
-.editorial-copy {
-  padding: 64px;
-  align-self: center;
+.editorial-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #4c1527f2 0%, #4c1527b3 45%, transparent 100%);
+  z-index: 1;
 }
 
-.editorial-copy h2 {
-  font-size: 46px;
+.editorial-banner-frame {
+  position: absolute;
+  inset: 16px;
+  border: 1px solid #c9a24b88;
+  border-radius: 8px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.editorial-banner-copy {
+  position: relative;
+  z-index: 3;
+  max-width: 520px;
+  padding: 56px 64px;
+  color: #f7e8c2;
+}
+
+.editorial-banner-copy .eyebrow {
+  color: var(--gold);
+}
+
+.editorial-banner-copy h2 {
+  font-size: 44px;
   line-height: 1.14;
+  margin-bottom: 18px;
+  color: #fff8e7;
 }
 
-.editorial-copy>p:not(.eyebrow) {
-  font: 16px/1.8 Lora;
-  color: #65565a;
+.editorial-banner-text {
+  font: 16px/1.8 Lora, serif;
+  color: #f1e3c4;
   margin-bottom: 28px;
 }
+
+.editorial-banner-copy .btn-secondary {
+  color: #f7e8c2;
+  border-color: var(--gold);
+}
+
+.editorial-banner-copy .btn-secondary:hover {
+  background: #c9a24b33;
+}
+
+@media (max-width: 700px) {
+  .editorial-banner { min-height: 380px; }
+  .editorial-banner::before { background: #4c1527cc; }
+  .editorial-banner-copy { padding: 40px 28px; }
+  .editorial-banner-copy h2 { font-size: 32px; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .promo {
   background: var(--burgundy);
@@ -575,4 +649,3 @@
 .promo .btn {
   color: #f7e8c2;
 }
-
