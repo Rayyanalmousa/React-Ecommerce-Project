@@ -1,3 +1,4 @@
+
 .page-intro {
   text-align: center;
   padding: 72px 0 48px;
@@ -45,23 +46,61 @@
   min-width: 0;
 }
 
+/* Sorting Dropdown */
 .select-box {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 10px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .select-box span {
   color: #796b6e;
+  font-weight: 400;
 }
 
 .select-box select {
+  appearance: none;
+  -webkit-appearance: none;
+
+  min-width: 145px;
+  padding: 8px 25px 8px 2px;
+
   border: 0;
-  background: transparent;
-  font-weight: 600;
+  border-radius: 0;
   outline: 0;
+
+  background-color: transparent;
+  color: #352327;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23352327' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right center;
+
+  transition: color 0.2s ease;
+}
+
+.select-box select:hover {
+  color: var(--burgundy);
+}
+
+.select-box select:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.select-box select option {
+  background: #f8f3e8;
+  color: #352327;
 }
 
 .filter-mobile {
@@ -245,3 +284,41 @@
   margin-bottom: 28px;
 }
 
+
+/* Elegant Bookish Dropdown Options */
+.select-box select {
+  border: 1px solid #d9c9ae;
+  border-radius: 6px;
+  padding: 9px 28px 9px 12px;
+  background-color: #f8f3e8;
+  color: #352327;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Options */
+.select-box select option {
+  background-color: #f8f3e8;
+  color: #4a3435;
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* Hover / Selected */
+.select-box select option:checked {
+  background-color: #e9ddc8;
+  color: #6b1e2e;
+}
+
+/* Focus */
+.select-box select:focus {
+  border-color: #c9a24b;
+  outline: none;
+  box-shadow: 0 0 0 3px #c9a24b20;
+}
+
+.select-box select:hover {
+  border-color: #c9a24b;
+}
