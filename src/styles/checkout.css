@@ -32,7 +32,7 @@
   margin-bottom: 28px;
 }
 
-.form-section-head>span {
+.form-section-head > span {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -71,17 +71,17 @@
   font-weight: 600;
 }
 
-.field>span {
+.field > span {
   display: flex;
   justify-content: space-between;
 }
 
-.field>span b {
+.field > span b {
   color: var(--burgundy);
   margin-left: 3px;
 }
 
-.field>span small {
+.field > span small {
   font-weight: 400;
   color: #98898b;
 }
@@ -122,7 +122,7 @@
   border-color: var(--sage);
 }
 
-.field.success>small {
+.field.success > small {
   color: var(--sage);
 }
 
@@ -180,6 +180,79 @@
   font-style: normal;
 }
 
+.card-payment-reveal {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  visibility: hidden;
+  transition:
+    max-height 0.25s ease,
+    margin-top 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.25s ease,
+    visibility 0s linear 0.25s;
+}
+
+.card-payment-reveal.is-visible {
+  max-height: 650px;
+  margin-top: 14px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
+  transition:
+    max-height 0.25s ease,
+    margin-top 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.25s ease,
+    visibility 0s;
+}
+
+.card-payment-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 16px;
+  border: 1px solid var(--parchment);
+  border-radius: 10px;
+  background: var(--cream);
+  padding: 22px;
+}
+
+.card-payment-field {
+  min-width: 0;
+}
+
+.card-payment-field-full {
+  grid-column: 1 / -1;
+}
+
+.card-payment-brand {
+  color: var(--burgundy) !important;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+  .card-payment-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px;
+  }
+
+  .card-payment-field-full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-payment-reveal,
+  .card-payment-reveal.is-visible {
+    transition: none;
+  }
+}
+
 .checkout-summary {
   top: 105px;
 }
@@ -190,7 +263,7 @@
   margin-bottom: 14px;
 }
 
-.checkout-items>div {
+.checkout-items > div {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -202,7 +275,7 @@
   height: 57px;
 }
 
-.checkout-items>div>span {
+.checkout-items > div > span {
   display: grid;
   gap: 4px;
   flex: 1;
@@ -217,7 +290,6 @@
   font-size: 9px;
 }
 
-.checkout-items>div>strong {
+.checkout-items > div > strong {
   font-size: 11px;
 }
-
