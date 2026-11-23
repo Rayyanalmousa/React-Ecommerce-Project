@@ -1,12 +1,14 @@
 import { useState } from "react";
-import type { Page } from "../data/store";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTES } from "../data/store";
+import { useStore } from "../context/StoreContext";
 import { Icon, Logo } from "./primitives";
 
 const navLinks = [
-  ["Home", "home"],
-  ["Books", "products"],
-  ["Wishlist", "wishlist"],
-  ["Cart", "cart"],
+  ["Home", ROUTES.home],
+  ["Books", ROUTES.products],
+  ["Wishlist", ROUTES.wishlist],
+  ["Cart", ROUTES.cart],
 ] as const;
 
 function AnimatedLink({
@@ -34,21 +36,17 @@ function AnimatedLink({
   );
 }
 
-export function Navbar({
-  page,
-  go,
-  cartOpen,
-  cartCount,
-}: {
-  page: Page;
-  go: (page: Page) => void;
-  cartOpen: boolean;
-  cartCount: number;
-}) {
+export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { cartCount, wishlistCount } = useStore();
+  const { pathname } = useLocation();
+  const routerNavigate = useNavigate();
 
-  const navigate = (target: Page) => {
-    go(target);
+  const isActive = (target: string) =>
+    target === ROUTES.home ? pathname === ROUTES.home : pathname.startsWith(target);
+
+  const navigate = (target: string) => {
+    routerNavigate(target);
     setMenuOpen(false);
   };
 
@@ -56,13 +54,13 @@ export function Navbar({
     <>
       <header className={`bookish-navbar${menuOpen ? " menu-open" : ""}`}>
         <nav className="navbar-main" aria-label="Primary navigation">
-          <Logo onClick={() => navigate("home")} />
+          <Logo onClick={() => navigate(ROUTES.home)} />
           <div className="navbar-links">
             {navLinks.map(([label, target]) => (
               <AnimatedLink
                 key={target}
                 label={label}
-                active={page === target || (target === "cart" && cartOpen)}
+                active={isActive(target)}
                 onClick={() => navigate(target)}
               />
             ))}
@@ -71,14 +69,28 @@ export function Navbar({
             <button
               className="icon-btn navbar-desktop-action"
               aria-label="Search books"
-              onClick={() => navigate("products")}
+              onClick={() => navigate(ROUTES.products)}
             >
               <Icon name="search" size={18} />
             </button>
             <button
-              className={`icon-btn${cartOpen ? " active" : ""}`}
+              className={`icon-btn${isActive(ROUTES.wishlist) ? " active" : ""}`}
+              aria-label={
+                wishlistCount > 0 ? `Wishlist, ${wishlistCount} saved items` : "Wishlist"
+              }
+              onClick={() => navigate(ROUTES.wishlist)}
+            >
+              <Icon name="heart" size={18} />
+              {wishlistCount > 0 && (
+                <span className="navbar-count" aria-hidden="true">
+                  {wishlistCount}
+                </span>
+              )}
+            </button>
+            <button
+              className={`icon-btn${isActive(ROUTES.cart) ? " active" : ""}`}
               aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : "Cart"}
-              onClick={() => navigate("cart")}
+              onClick={() => navigate(ROUTES.cart)}
             >
               <Icon name="bag" size={18} />
               {cartCount > 0 && (
@@ -106,15 +118,15 @@ export function Navbar({
             <button
               type="button"
               key={target}
-              className={page === target ? "active" : ""}
-              aria-current={page === target ? "page" : undefined}
+              className={isActive(target) ? "active" : ""}
+              aria-current={isActive(target) ? "page" : undefined}
               onClick={() => navigate(target)}
             >
               {label}
               <Icon name="arrow" size={16} />
             </button>
           ))}
-          <button type="button" onClick={() => navigate("products")}>
+          <button type="button" onClick={() => navigate(ROUTES.products)}>
             Search books
             <Icon name="search" size={16} />
           </button>

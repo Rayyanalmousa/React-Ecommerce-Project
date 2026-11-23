@@ -1,11 +1,3 @@
-export type Page =
-  | "home"
-  | "products"
-  | "cart"
-  | "wishlist"
-  | "checkout"
-  | "confirmation"
-  | "style";
 export type Product = {
   id: number;
   title: string;
@@ -18,6 +10,17 @@ export type Product = {
 };
 
 export const FREE_SHIPPING_THRESHOLD = 150;
+export const SHIPPING_FEE = 5;
+export const MAX_QUANTITY = 99;
+
+export const ROUTES = {
+  home: "/",
+  products: "/products",
+  cart: "/cart",
+  wishlist: "/wishlist",
+  checkout: "/checkout",
+  confirmation: "/confirmation",
+} as const;
 
 export const products: Product[] = [
   {
@@ -110,11 +113,15 @@ export const products: Product[] = [
   },
 ];
 
-export const categories = [
+export type CategoryCard = readonly [name: string, tagline: string, image: string];
+
+export const categories: CategoryCard[] = [
   ["Fiction", "Stories that stay with you", products[0].image],
-  ["Non-Fiction", "Curiosity, beautifully bound", products[1].image],
+  ["Classics", "Timeless voices, beautifully bound", products[1].image],
   ["Fantasy", "Other worlds await", products[2].image],
   ["Self-Growth", "Pages for becoming", products[3].image],
   ["Kids", "Little readers, big dreams", products[5].image],
   ["Accessories", "For your reading ritual", products[6].image],
 ];
+
+export const categoryNames: string[] = categories.map(([name]) => name);
