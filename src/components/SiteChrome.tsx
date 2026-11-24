@@ -25,9 +25,9 @@ export function Footer() {
         </div>
         <div>
           <h4>Explore</h4>
-          <button onClick={() => navigate(ROUTES.products)}>All books</button>
-          <button onClick={() => navigate(ROUTES.wishlist)}>Wishlist</button>
-          <button onClick={() => navigate(ROUTES.cart)}>Cart</button>
+          <button onClick={() => go("products")}>Our books</button>
+          <button onClick={() => go("wishlist")}>Wishlist</button>
+          <button onClick={() => go("style")}>Style guide</button>
         </div>
         <div>
           <h4>Categories</h4>
