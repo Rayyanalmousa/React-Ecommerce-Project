@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_CHECKOUT, validateCheckout } from "./checkout";
+import { EMPTY_CHECKOUT, validateCheckout } from "../src/schemas/checkout";
 
 const valid = {
   fullName: "Jane Austen",

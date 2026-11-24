@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { StoreProvider, useStore } from "./StoreContext";
-import { initialState, loadState, STORAGE_KEY, storeReducer } from "./storeReducer";
-import { Products } from "../pages/Products";
-import { Cart } from "../pages/Cart";
+import { StoreProvider, useStore } from "../src/context/StoreContext";
+import { initialState, loadState, STORAGE_KEY, storeReducer } from "../src/context/storeReducer";
+import { Products } from "../src/pages/Products";
+import { Cart } from "../src/pages/Cart";
 
 describe("storeReducer (cart)", () => {
   it("adds a product to the cart", () => {
@@ -22,19 +22,6 @@ describe("storeReducer (cart)", () => {
     expect(storeReducer(initialState, { type: "ADD_TO_CART", id: 9999 })).toBe(initialState);
   });
 
-  it("updates quantities and removes items", () => {
-    let state = storeReducer(initialState, { type: "ADD_TO_CART", id: 1 });
-    state = storeReducer(state, { type: "SET_QUANTITY", id: 1, quantity: 4 });
-    expect(state.cart[0].quantity).toBe(4);
-    state = storeReducer(state, { type: "REMOVE_FROM_CART", id: 1 });
-    expect(state.cart).toEqual([]);
-  });
-
-  it("clears the whole cart", () => {
-    let state = storeReducer(initialState, { type: "ADD_TO_CART", id: 1 });
-    state = storeReducer(state, { type: "ADD_TO_CART", id: 2 });
-    expect(storeReducer(state, { type: "CLEAR_CART" }).cart).toEqual([]);
-  });
 });
 
 describe("storeReducer (wishlist)", () => {

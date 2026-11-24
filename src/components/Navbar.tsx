@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ROUTES } from "../data/store";
-import { useStore } from "../context/StoreContext";
+import { useState } from "react"; //tracks whether the mobile menu is open.
+import { useLocation, useNavigate } from "react-router-dom"; //read the current URL and change pages without a reload.
+import { ROUTES } from "../data/store"; //one object holding all paths, so you never type "/cart" by hand.
+import { useStore } from "../context/StoreContext"; //reads cartCount and wishlistCount from the global store.
 import { Icon, Logo } from "./primitives";
 
 const navLinks = [
@@ -11,7 +11,7 @@ const navLinks = [
   ["Cart", ROUTES.cart],
 ] as const;
 
-function AnimatedLink({
+function AnimatedLink({ //3 props
   label,
   active,
   onClick,

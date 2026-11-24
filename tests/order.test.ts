@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { generateOrderReference } from "./order";
-import { getTotals } from "./pricing";
+import { generateOrderReference } from "../src/utils/order";
+import { getTotals } from "../src/utils/pricing";
 
 describe("generateOrderReference", () => {
   it("uses the date and a four digit suffix", () => {

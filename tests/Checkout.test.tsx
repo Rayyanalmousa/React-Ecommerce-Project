@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { StoreProvider, useStore } from "../context/StoreContext";
-import { initialState } from "../context/storeReducer";
-import { Checkout } from "./Checkout";
-import { Confirmation } from "./Confirmation";
+import { StoreProvider, useStore } from "../src/context/StoreContext";
+import { initialState } from "../src/context/storeReducer";
+import { Checkout } from "../src/pages/Checkout";
+import { Confirmation } from "../src/pages/Confirmation";
 
 function CartCount() {
   const { cartCount, wishlistCount } = useStore();
