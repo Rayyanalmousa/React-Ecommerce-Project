@@ -1,6 +1,9 @@
 import { useCallback, useRef, useState } from "react";
-import type { FormEvent } from "react";
-import { FREE_SHIPPING_THRESHOLD, type Page, type Product } from "../data/store";
+import type { ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../data/store";
+import { useStore } from "../context/StoreContext";
+import type { PaymentMethod } from "../context/storeReducer";
 import { Button, Icon } from "../components/primitives";
 import { EmptyState } from "../components/StoreComponents";
 import {
@@ -9,7 +12,16 @@ import {
   type CardPaymentField,
   type CardPaymentValues,
 } from "../components/CardPaymentForm";
+import {
+  CHECKOUT_FIELDS,
+  EMPTY_CHECKOUT,
+  validateCheckout,
+  type CheckoutErrors,
+  type CheckoutField,
+  type CheckoutValues,
+} from "../schemas/checkout";
 import { detectBrand, luhnCheck, validateExpiry } from "../utils/card";
+import { formatPrice } from "../utils/pricing";
 
 const EMPTY_CARD: CardPaymentValues = {
   name: "",
@@ -53,20 +65,19 @@ function validateCardField(field: CardPaymentField, values: CardPaymentValues): 
   return undefined;
 }
 
-export function Checkout({
-  cart,
-  quantities,
-  go,
-}: {
-  cart: Product[];
-  quantities: Record<number, number>;
-  go: (p: Page) => void;
-}) {
+export function Checkout() {
+  const navigate = useNavigate();
+  const { items, totals, placeOrder } = useStore();
+  const [values, setValues] = useState<CheckoutValues>(EMPTY_CHECKOUT);
+  const [errors, setErrors] = useState<CheckoutErrors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [payment, setPayment] = useState<"cash" | "card">("cash");
+  const [payment, setPayment] = useState<PaymentMethod>("cash");
   const [cardValues, setCardValues] = useState<CardPaymentValues>(EMPTY_CARD);
   const [cardErrors, setCardErrors] = useState<CardPaymentErrors>({});
   const cardInputRefs = useRef<Partial<Record<CardPaymentField, HTMLInputElement>>>({});
+  const fieldRefs = useRef<Partial<Record<CheckoutField, HTMLInputElement | HTMLTextAreaElement>>>(
+    {},
+  );
   const registerCardInput = useCallback(
     (field: CardPaymentField, input: HTMLInputElement | null) => {
       if (input) cardInputRefs.current[field] = input;
@@ -74,19 +85,47 @@ export function Checkout({
     },
     [],
   );
-  const subtotal = cart.reduce((s, p) => s + p.price * (quantities[p.id] || 1), 0);
-  if (!cart.length)
+  const registerField = useCallback(
+    (field: CheckoutField, input: HTMLInputElement | HTMLTextAreaElement | null) => {
+      if (input) fieldRefs.current[field] = input;
+      else delete fieldRefs.current[field];
+    },
+    [],
+  );
+
+  if (!items.length)
     return (
       <main className="container empty-page">
         <EmptyState
           kind="bag"
           title="Nothing to check out yet"
           text="Choose a book or two before heading to checkout."
-          action={() => go("products")}
+          action={() => navigate(ROUTES.products)}
           label="Back to books"
         />
       </main>
     );
+
+  const changeField = (field: CheckoutField, value: string) => {
+    setValues((current) => ({ ...current, [field]: value }));
+    setErrors((current) => {
+      if (!current[field]) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const blurField = (field: CheckoutField) => {
+    const error = validateCheckout(values).errors[field];
+    setErrors((current) => {
+      const next = { ...current };
+      if (error) next[field] = error;
+      else delete next[field];
+      return next;
+    });
+  };
+
   const changeCardField = (field: CardPaymentField, value: string) => {
     setCardValues((current) => {
       const next = { ...current, [field]: value };
@@ -124,20 +163,33 @@ export function Checkout({
       return next;
     });
   };
-  const place = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+
+  const place = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setSubmitted(true);
-    const form = e.currentTarget;
+
+    const delivery = validateCheckout(values);
+    setErrors(delivery.errors);
     const cardValid = payment === "cash" || validateCardForm();
-    if (form.checkValidity() && cardValid) {
-      setCardValues(EMPTY_CARD);
-      setCardErrors({});
-      go("confirmation");
+
+    if (!delivery.success) {
+      const firstInvalid = CHECKOUT_FIELDS.find((field) => delivery.errors[field]);
+      if (firstInvalid) fieldRefs.current[firstInvalid]?.focus();
+      return;
     }
+    if (!cardValid) return;
+
+    placeOrder(delivery.data, payment);
+    setCardValues(EMPTY_CARD);
+    setCardErrors({});
+    navigate(ROUTES.confirmation);
   };
+
+  const hasErrors = Object.keys(errors).length > 0 || Object.keys(cardErrors).length > 0;
+
   return (
     <main className="container checkout-page">
-      <button className="back-link" onClick={() => go("cart")}>
+      <button type="button" className="back-link" onClick={() => navigate(ROUTES.cart)}>
         ← Back to cart
       </button>
       <div className="page-intro compact">
@@ -154,36 +206,103 @@ export function Checkout({
             </div>
           </div>
           <div className="form-grid">
-            <Field label="Full name" placeholder="Jane Austen" required submitted={submitted} />
             <Field
+              name="fullName"
+              label="Full name"
+              placeholder="Jane Austen"
+              autoComplete="name"
+              required
+              value={values.fullName}
+              error={errors.fullName}
+              onValueChange={changeField}
+              onFieldBlur={blurField}
+              inputRef={registerField}
+            />
+            <Field
+              name="email"
               label="Email address"
               type="email"
               placeholder="jane@example.com"
+              autoComplete="email"
               required
-              submitted={submitted}
+              value={values.email}
+              error={errors.email}
+              onValueChange={changeField}
+              onFieldBlur={blurField}
+              inputRef={registerField}
             />
             <Field
+              name="phone"
               label="Phone number"
               type="tel"
               placeholder="+1 (555) 000-0000"
+              autoComplete="tel"
               required
-              submitted={submitted}
+              value={values.phone}
+              error={errors.phone}
+              onValueChange={changeField}
+              onFieldBlur={blurField}
+              inputRef={registerField}
             />
-            <Field label="City" placeholder="Bath" required submitted={submitted} />
+            <Field
+              name="city"
+              label="City"
+              placeholder="Bath"
+              autoComplete="address-level2"
+              required
+              value={values.city}
+              error={errors.city}
+              onValueChange={changeField}
+              onFieldBlur={blurField}
+              inputRef={registerField}
+            />
             <div className="span-2">
               <Field
+                name="street"
                 label="Street address"
                 placeholder="42 Milsom Street"
+                autoComplete="street-address"
                 required
-                submitted={submitted}
+                value={values.street}
+                error={errors.street}
+                onValueChange={changeField}
+                onFieldBlur={blurField}
+                inputRef={registerField}
               />
             </div>
-            <Field label="Postal code" placeholder="BA1 1DN" required submitted={submitted} />
-            <label className="field span-2">
+            <Field
+              name="postalCode"
+              label="Postal code"
+              placeholder="BA1 1DN"
+              autoComplete="postal-code"
+              required
+              value={values.postalCode}
+              error={errors.postalCode}
+              onValueChange={changeField}
+              onFieldBlur={blurField}
+              inputRef={registerField}
+            />
+            <label className={`field span-2${errors.notes ? " invalid" : ""}`}>
               <span>
                 Delivery notes <small>Optional</small>
               </span>
-              <textarea placeholder="Anything our courier should know?" rows={3} />
+              <textarea
+                ref={(element) => registerField("notes", element)}
+                placeholder="Anything our courier should know?"
+                rows={3}
+                value={values.notes}
+                aria-invalid={Boolean(errors.notes)}
+                aria-describedby={errors.notes ? "notes-error" : undefined}
+                onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                  changeField("notes", event.target.value)
+                }
+                onBlur={() => blurField("notes")}
+              />
+              {errors.notes && (
+                <small className="error-msg" id="notes-error">
+                  {errors.notes}
+                </small>
+              )}
             </label>
           </div>
           <div className="form-section-head payment-head">
@@ -239,73 +358,102 @@ export function Checkout({
           <p className="eyebrow">In your parcel</p>
           <h2>Order summary</h2>
           <div className="checkout-items">
-            {cart.map((p) => (
-              <div key={p.id}>
+            {items.map(({ product, quantity, lineTotal }) => (
+              <div key={product.id}>
                 <div className="mini-cover">
-                  <img src={p.image} alt="" />
-                  <span style={{ background: p.color }} />
+                  <img src={product.image} alt="" />
+                  <span style={{ background: product.color }} />
                 </div>
                 <span>
-                  <b>{p.title}</b>
-                  <small>Qty {quantities[p.id] || 1}</small>
+                  <b>{product.title}</b>
+                  <small>Qty {quantity}</small>
                 </span>
-                <strong>${(p.price * (quantities[p.id] || 1)).toFixed(2)}</strong>
+                <strong>{formatPrice(lineTotal)}</strong>
               </div>
             ))}
           </div>
           <div className="summary-line">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>{formatPrice(totals.subtotal)}</span>
           </div>
           <div className="summary-line">
             <span>Shipping</span>
             <span className="sage">
-              {subtotal >= FREE_SHIPPING_THRESHOLD ? "Complimentary" : "Calculated at checkout"}
+              {totals.shipping === 0 ? "Complimentary" : formatPrice(totals.shipping)}
             </span>
           </div>
           <div className="total-line">
             <span>Total</span>
-            <strong>${subtotal.toFixed(2)}</strong>
+            <strong>{formatPrice(totals.total)}</strong>
           </div>
           <Button type="submit" className="full">
             Place order <Icon name="arrow" />
           </Button>
-          {submitted && <p className="form-error">Please complete the highlighted fields.</p>}
+          {submitted && hasErrors && (
+            <p className="form-error" role="alert">
+              Please fix the highlighted fields.
+            </p>
+          )}
           <p className="secure-note">By placing your order, you agree to our terms.</p>
         </aside>
       </form>
     </main>
   );
 }
-export function Field({
-  label,
-  placeholder,
-  type = "text",
-  required,
-  submitted,
-}: {
+
+type FieldProps = {
+  name: CheckoutField;
   label: string;
   placeholder: string;
   type?: string;
+  autoComplete?: string;
   required?: boolean;
-  submitted?: boolean;
-}) {
-  const [value, setValue] = useState("");
-  const invalid = submitted && required && !value;
+  value: string;
+  error?: string;
+  onValueChange: (field: CheckoutField, value: string) => void;
+  onFieldBlur: (field: CheckoutField) => void;
+  inputRef: (field: CheckoutField, input: HTMLInputElement | null) => void;
+};
+
+export function Field({
+  name,
+  label,
+  placeholder,
+  type = "text",
+  autoComplete,
+  required,
+  value,
+  error,
+  onValueChange,
+  onFieldBlur,
+  inputRef,
+}: FieldProps) {
+  const errorId = `${name}-error`;
   return (
-    <label className={`field ${invalid ? "invalid" : ""}`}>
+    <label className={`field${error ? " invalid" : ""}`}>
       <span>
         {label}
-        {required && <b>*</b>}
+        {required && <b aria-hidden="true">*</b>}
       </span>
       <input
+        ref={(element) => inputRef(name, element)}
+        id={`checkout-${name}`}
+        name={name}
         type={type}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        required={required}
+        aria-required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(event) => onValueChange(name, event.target.value)}
+        onBlur={() => onFieldBlur(name)}
       />
-      {invalid && <small className="error-msg">Please enter your {label.toLowerCase()}.</small>}
+      {error && (
+        <small className="error-msg" id={errorId}>
+          {error}
+        </small>
+      )}
     </label>
   );
 }

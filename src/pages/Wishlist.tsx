@@ -1,21 +1,14 @@
-import type { Page } from "../data/store";
-import { products } from "../data/store";
-import { Icon } from "../components/primitives";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../data/store";
+import { useStore } from "../context/StoreContext";
+import { Button, Icon } from "../components/primitives";
 import { ProductCard } from "../components/StoreComponents";
-import { Button } from "../components/primitives";
 
-export function Wishlist({
-  wished,
-  toggleWish,
-  addCart,
-  go,
-}: {
-  wished: number[];
-  toggleWish: (id: number) => void;
-  addCart: (id: number) => void;
-  go: (p: Page) => void;
-}) {
-  const items = products.filter((p) => wished.includes(p.id));
+export function Wishlist() {
+  const navigate = useNavigate();
+  const { wishlistProducts: items, toggleWishlist, removeFromWishlist, addToCart } = useStore();
+  const goToProducts = () => navigate(ROUTES.products);
+
   return (
     <main className="container wishlist-page">
       <header className="wishlist-heading">
@@ -41,7 +34,7 @@ export function Wishlist({
             <p>
               Your collection <span>({items.length})</span>
             </p>
-            <button type="button" onClick={() => go("products")}>
+            <button type="button" onClick={goToProducts}>
               Discover more <Icon name="arrow" size={16} />
             </button>
           </div>
@@ -51,13 +44,13 @@ export function Wishlist({
                 <ProductCard
                   product={product}
                   wished
-                  onWish={() => toggleWish(product.id)}
-                  onCart={() => addCart(product.id)}
+                  onWish={() => toggleWishlist(product.id)}
+                  onCart={() => addToCart(product.id)}
                 />
                 <button
                   type="button"
                   className="wishlist-remove"
-                  onClick={() => toggleWish(product.id)}
+                  onClick={() => removeFromWishlist(product.id)}
                   aria-label={`Remove ${product.title} from your wishlist`}
                 >
                   <Icon name="x" size={14} />
@@ -76,7 +69,7 @@ export function Wishlist({
           <p className="eyebrow">Nothing tucked away just yet</p>
           <h2>Leave room for a story.</h2>
           <p>Tap the heart on anything you love and it will be waiting here when you return.</p>
-          <Button variant="secondary" onClick={() => go("products")}>
+          <Button variant="secondary" onClick={goToProducts}>
             Explore the collection <Icon name="arrow" size={17} />
           </Button>
           <small>Your saved books stay together on this shelf.</small>

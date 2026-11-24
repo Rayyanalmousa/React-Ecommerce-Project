@@ -1,12 +1,17 @@
-import type { Page } from "../data/store";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../data/store";
 import { Icon, Logo } from "./primitives";
 
-export function Footer({ go }: { go: (p: Page) => void }) {
+export function Footer() {
+  const navigate = useNavigate();
+  const openCategory = (category: string) =>
+    navigate(`${ROUTES.products}?category=${encodeURIComponent(category)}`);
+
   return (
     <footer>
       <div className="container footer-grid">
         <div>
-          <Logo onClick={() => go("home")} />
+          <Logo onClick={() => navigate(ROUTES.home)} />
           <p className="footer-tagline">
             Thoughtfully chosen stories and objects for slower, cozier days.
           </p>
@@ -26,9 +31,9 @@ export function Footer({ go }: { go: (p: Page) => void }) {
         </div>
         <div>
           <h4>Categories</h4>
-          <button onClick={() => go("products")}>Fiction</button>
-          <button onClick={() => go("products")}>Fantasy</button>
-          <button onClick={() => go("products")}>Accessories</button>
+          <button onClick={() => openCategory("Fiction")}>Fiction</button>
+          <button onClick={() => openCategory("Fantasy")}>Fantasy</button>
+          <button onClick={() => openCategory("Accessories")}>Accessories</button>
         </div>
         <div className="newsletter">
           <h4>Notes from the stacks</h4>

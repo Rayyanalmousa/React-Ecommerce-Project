@@ -1,60 +1,50 @@
 import { useMemo, useState } from "react";
-import { products } from "../data/store";
+import { useSearchParams } from "react-router-dom";
+import { categoryNames, products } from "../data/store";
+import { useStore } from "../context/StoreContext";
 import { Button, Icon } from "../components/primitives";
 import { EmptyState, ProductCard } from "../components/StoreComponents";
+import {
+  filterProducts,
+  PRICE_MAX,
+  PRICE_MIN,
+  type SortOption,
+} from "../utils/filterProducts";
 
-export function Products({
-  wished,
-  toggleWish,
-  addCart,
-}: {
-  wished: number[];
-  toggleWish: (id: number) => void;
-  addCart: (id: number) => void;
-}) {
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("featured");
-  const [selected, setSelected] = useState<string[]>([]);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(40);
-  const filtered = useMemo(
-    () =>
-      products
-        .filter(
-          (p) =>
-            (!query || `${p.title} ${p.author}`.toLowerCase().includes(query.toLowerCase())) &&
-            (!selected.length || selected.includes(p.category)) &&
-            p.price <= maxPrice,
-        )
-        .sort((a, b) =>
-          sort === "low" ? a.price - b.price : sort === "high" ? b.price - a.price : a.id - b.id,
-        ),
-    [query, selected, sort, maxPrice],
-  );
-  const clear = () => {
-    setQuery("");
-    setSelected([]);
-    setMaxPrice(40);
-  };
-  const FilterContent = () => (
+type FiltersPanelProps = {
+  selected: string[];
+  maxPrice: number;
+  onToggleCategory: (category: string) => void;
+  onMaxPriceChange: (price: number) => void;
+  onClear: () => void;
+};
+
+function FiltersPanel({
+  selected,
+  maxPrice,
+  onToggleCategory,
+  onMaxPriceChange,
+  onClear,
+}: FiltersPanelProps) {
+  return (
     <div className="filters-content">
       <div className="filter-title">
         <h3>Filter by</h3>
-        <button onClick={clear}>Clear all</button>
+        <button type="button" onClick={onClear}>
+          Clear all
+        </button>
       </div>
       <fieldset>
         <legend>Category</legend>
-        {["Fiction", "Classics", "Fantasy", "Self-Growth", "Kids", "Accessories"].map((c) => (
-          <label className="check-row" key={c}>
+        {categoryNames.map((category) => (
+          <label className="check-row" key={category}>
             <input
               type="checkbox"
-              checked={selected.includes(c)}
-              onChange={() =>
-                setSelected((s) => (s.includes(c) ? s.filter((x) => x !== c) : [...s, c]))
-              }
+              checked={selected.includes(category)}
+              onChange={() => onToggleCategory(category)}
             />
-            <span>{c}</span>
-            <small>{products.filter((p) => p.category === c).length}</small>
+            <span>{category}</span>
+            <small>{products.filter((product) => product.category === category).length}</small>
           </label>
         ))}
       </fieldset>
@@ -63,28 +53,66 @@ export function Products({
         <input
           className="range"
           type="range"
-          min="10"
-          max="40"
+          min={PRICE_MIN}
+          max={PRICE_MAX}
           value={maxPrice}
-          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          aria-label="Maximum price"
+          onChange={(event) => onMaxPriceChange(Number(event.target.value))}
         />
         <div className="price-inputs">
-          <span>$10</span>
+          <span>${PRICE_MIN}</span>
           <span>to</span>
           <span>${maxPrice}</span>
         </div>
       </fieldset>
-      <fieldset>
-        <legend>Availability</legend>
-        <label className="radio-row">
-          <input type="radio" name="stock" defaultChecked /> In stock
-        </label>
-        <label className="radio-row">
-          <input type="radio" name="stock" /> All items
-        </label>
-      </fieldset>
     </div>
   );
+}
+
+export function Products() {
+  const { isWished, toggleWishlist, addToCart } = useStore();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<SortOption>("featured");
+  const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  // The selected categories live in the URL (?category=Fiction) so links from
+  // the home page and footer can open a pre-filtered list.
+  const selected = useMemo(
+    () => searchParams.getAll("category").filter((name) => categoryNames.includes(name)),
+    [searchParams],
+  );
+
+  const filtered = useMemo(
+    () => filterProducts(products, { query, categories: selected, maxPrice, sort }),
+    [query, selected, maxPrice, sort],
+  );
+
+  const toggleCategory = (category: string) => {
+    const next = selected.includes(category)
+      ? selected.filter((name) => name !== category)
+      : [...selected, category];
+    const params = new URLSearchParams();
+    next.forEach((name) => params.append("category", name));
+    setSearchParams(params, { replace: true });
+  };
+
+  const clear = () => {
+    setQuery("");
+    setSort("featured");
+    setMaxPrice(PRICE_MAX);
+    setSearchParams({}, { replace: true });
+  };
+
+  const panelProps: FiltersPanelProps = {
+    selected,
+    maxPrice,
+    onToggleCategory: toggleCategory,
+    onMaxPriceChange: setMaxPrice,
+    onClear: clear,
+  };
+
   return (
     <main className="container listing-page">
       <div className="page-intro">
@@ -98,15 +126,15 @@ export function Products({
           <input
             placeholder="Search by title or author…"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(event) => setQuery(event.target.value)}
           />
         </label>
-        <button className="filter-mobile" onClick={() => setFilterOpen(true)}>
+        <button type="button" className="filter-mobile" onClick={() => setFilterOpen(true)}>
           <Icon name="filter" /> Filters
         </button>
         <label className="select-box">
           <span>Sort by:</span>
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
             <option value="featured">Featured</option>
             <option value="low">Price: Low to High</option>
             <option value="high">Price: High to Low</option>
@@ -115,7 +143,7 @@ export function Products({
       </div>
       <div className="shop-layout">
         <aside className="filters">
-          <FilterContent />
+          <FiltersPanel {...panelProps} />
         </aside>
         <section className="results">
           <div className="results-line">
@@ -124,13 +152,13 @@ export function Products({
           </div>
           {filtered.length ? (
             <div className="product-grid listing-grid">
-              {filtered.map((p) => (
+              {filtered.map((product) => (
                 <ProductCard
-                  key={p.id}
-                  product={p}
-                  wished={wished.includes(p.id)}
-                  onWish={() => toggleWish(p.id)}
-                  onCart={() => addCart(p.id)}
+                  key={product.id}
+                  product={product}
+                  wished={isWished(product.id)}
+                  onWish={() => toggleWishlist(product.id)}
+                  onCart={() => addToCart(product.id)}
                 />
               ))}
             </div>
@@ -147,14 +175,19 @@ export function Products({
       </div>
       {filterOpen && (
         <div className="drawer-backdrop" onClick={() => setFilterOpen(false)}>
-          <aside className="filter-drawer" onClick={(e) => e.stopPropagation()}>
+          <aside className="filter-drawer" onClick={(event) => event.stopPropagation()}>
             <div className="drawer-head">
               <h2>Filters</h2>
-              <button className="icon-btn" onClick={() => setFilterOpen(false)}>
+              <button
+                type="button"
+                className="icon-btn"
+                aria-label="Close filters"
+                onClick={() => setFilterOpen(false)}
+              >
                 <Icon name="x" />
               </button>
             </div>
-            <FilterContent />
+            <FiltersPanel {...panelProps} />
             <Button className="full" onClick={() => setFilterOpen(false)}>
               Show {filtered.length} results
             </Button>
